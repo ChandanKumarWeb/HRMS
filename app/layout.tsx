@@ -1,27 +1,41 @@
+"use client";
+
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import { ThemeProvider } from "@/components/theme-provider";
+import { useState } from "react";
 import "./globals.css";
+import { Providers } from "./providers";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [collapsed, setCollapsed] = useState(false);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="flex min-h-screen bg-gray-100">
-            {/* Sidebar on the left */}
-            <Sidebar />
+          {/* Wrap ALL content inside Providers */}
+          <Providers>
+            <div className="flex min-h-screen bg-gray-100 dark:bg-black">
 
-            {/* Right content area */}
-            <div className="flex-1 flex flex-col">
-              <Header />
-              <main className="border border-orange-600">{children}</main>
+              {/* Sidebar */}
+              <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+
+              {/* Right Content */}
+              <div className="flex flex-1 flex-col overflow-hidden">
+                <Header collapsed={collapsed} setCollapsed={setCollapsed} />
+
+                <main className="flex-1 overflow-auto p-2">
+                  {children}
+                </main>
+              </div>
+
             </div>
-          </div>
+          </Providers>
         </ThemeProvider>
       </body>
     </html>

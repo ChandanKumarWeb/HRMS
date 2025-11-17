@@ -1,8 +1,18 @@
 "use client";
 
-import { Calendar, Home, Settings, Users } from "lucide-react";
+import { Calendar, Home, Settings, Users, X } from "lucide-react";
 import Link from "next/link";
-export default function Sidebar() {
+import { usePathname } from "next/navigation";
+
+export default function Sidebar({
+  collapsed,
+  setCollapsed,
+}: {
+  collapsed: boolean;
+  setCollapsed: (v: boolean) => void;
+}) {
+  const pathname = usePathname();
+
   const menu = [
     { title: "Dashboard", icon: Home, link: "/dashboard" },
     { title: "Employees", icon: Users, link: "/employees" },
@@ -11,18 +21,64 @@ export default function Sidebar() {
   ];
 
   return (
-    <aside className="w-64 bg-white shadow-md  dark:bg-black p-5">
-      <h1 className="text-xl font-bold mb-6">HRMS</h1>
+    <aside
+      className={`bg-gray-100 dark:bg-black border-r  border-black dark:border-white h-screen p-2 md:p-4 m-2 mr-0 ß transition-all duration-300
+        ${collapsed ? "hidden md:w-25 md:block" : "w-full md:w-64"}
+      `}
+    >
+      {/* Logo */}
+      <div className="mb-6 flex items-center justify-between">
+        <Link href="/">
+          <h1
+            className={`text-xl font-bold transition-opacity duration-300 
+          ${collapsed ? "opacity-100" : "opacity-100"}`}
+          >
+            HRMS
+          </h1>
+        </Link>
+
+        <button
+          className={`p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 block md:hidden ${
+            collapsed ? "hidden" : "block"
+          }`}
+          onClick={() => {
+            setCollapsed(true);
+          }}
+        >
+          <X size={22} />
+        </button>
+      </div>
 
       <nav className="space-y-3">
-        {menu.map((item, i) => (
-          <Link key={i} href={item.link}>
-            <div className="flex items-center gap-3 text-gray-700 hover:bg-gray-300 dark:text-gray-300 dark:hover:bg-gray-700  p-3 rounded cursor-pointer">
-              <item.icon size={18} />
-              <span>{item.title}</span>
-            </div>
-          </Link>
-        ))}
+        {menu.map((item, i) => {
+          const isActive = pathname.startsWith(item.link);
+
+          return (
+            <Link key={i} href={item.link}>
+              <div
+                className={`flex items-center gap-3 p-3 rounded cursor-pointer transition 
+                text-gray-700 dark:text-gray-300
+                ${
+                  isActive
+                    ? "bg-gray-300 dark:bg-gray-700 font-semibold"
+                    : "hover:bg-gray-200 dark:hover:bg-gray-800"
+                }`}
+              >
+                <item.icon size={18} />
+
+                {/* Hide text if collapsed */}
+                {!collapsed && (
+                  <span
+                    onClick={() => setCollapsed(true)}
+                  >
+                    {item.title}
+                  </span>
+                )}
+
+              </div>
+            </Link>
+          );
+        })}
       </nav>
     </aside>
   );
