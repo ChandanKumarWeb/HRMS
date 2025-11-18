@@ -1,9 +1,9 @@
 "use client";
 
 import {
-    flexRender,
-    getCoreRowModel,
-    useReactTable,
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
 } from "@tanstack/react-table";
 
 export default function DataTable({ data, columns }: any) {
@@ -14,8 +14,8 @@ export default function DataTable({ data, columns }: any) {
   });
 
   return (
-    <table className="min-w-full border border-gray-300">
-      <thead className="bg-gray-100 dark:bg-gray-800 ">
+    <table className="min-w-full border border-gray-500 rounded-2xl">
+      <thead className="bg-gray-100 dark:bg-black ">
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (

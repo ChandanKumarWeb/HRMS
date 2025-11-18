@@ -22,8 +22,8 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`bg-gray-100 dark:bg-black border-r  border-black dark:border-white h-screen p-2 md:p-4 m-2 mr-0 ß transition-all duration-300
-        ${collapsed ? "hidden md:w-25 md:block" : "w-full md:w-64"}
+      className={`bg-gray-100 dark:bg-black border-r  border-black dark:border-white h-screen p-2 md:p-4 m-2 mr-0 ß transition-all duration-600
+        ${collapsed ? "hidden md:w-25 md:block" : "w-full md:w-58"}
       `}
     >
       {/* Logo */}
@@ -61,12 +61,10 @@ export default function Sidebar({
                 ${
                   isActive
                     ? "bg-gray-300 dark:bg-gray-700 font-semibold"
-                    : "hover:bg-gray-200 dark:hover:bg-gray-800"
-                }`}
+                    : "hover:bg-gray-200 dark:hover:bg-gray-900"
+                } ${collapsed ? "justify-center" : "justify-start"}`}
               >
                 <item.icon size={18} />
-
-                {/* Hide text if collapsed */}
                 {!collapsed && (
                   <span
                     onClick={() => setCollapsed(true)}
@@ -74,9 +72,9 @@ export default function Sidebar({
                     {item.title}
                   </span>
                 )}
-
               </div>
             </Link>
+            
           );
         })}
       </nav>
