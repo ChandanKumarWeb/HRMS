@@ -14,9 +14,10 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { Trash2, UserPen } from "lucide-react";
+
 export default function UserAPIComponent() {
   const columns: ColumnDef<User>[] = [
     {
@@ -50,13 +51,16 @@ export default function UserAPIComponent() {
       cell: ({ row }) => {
         return (
           <div className="w-full flex justify-evenly">
-            {" "}
             <EditFN
+              id={row.original.id}
               name={row.original.name}
               role={row.original.role}
               phone={row.original.phone}
+              refetch={() => {
+                window.location.reload();
+              }}
             />
-            <Trash2 />
+            <Trash2 width={18} />
           </div>
         );
       },
@@ -82,78 +86,95 @@ export default function UserAPIComponent() {
 }
 
 function EditFN({
+  id,
   name,
   role,
-  phone
+  phone,
+  refetch,
 }: {
+  id: number;
   name: string;
   role: string;
-  phone: number
+  phone: string;
+  refetch: () => void;
 }) {
+  const updateMutation = useMutation({
+    mutationFn: async (formData: FormData) => {
+      return fetch(`/api/user/${id}`, {
+        method: "PUT",
+        body: JSON.stringify({
+          name: formData.get("name"),
+          role: formData.get("role"),
+          phone: Number(formData.get("phone")),
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+    },
+    onSuccess: () => {
+      refetch(); // 🔥 refresh table immediately
+    },
+  });
+
+  function handleSubmit(e: any) {
+    e.preventDefault();
+
+    const form = new FormData(e.target);
+    updateMutation.mutate(form);
+
+    document.getElementById(`close-dialog-${id}`)?.click();
+  }
+
   return (
-    <>
-      <Dialog>
-        <form>
-          <DialogTrigger asChild>
-            <Button>
-              <UserPen />
-            </Button>
-          </DialogTrigger>
+    <Dialog>
+      <DialogTrigger asChild>
+          <UserPen width={18} />
+      </DialogTrigger>
 
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Edit profile</DialogTitle>
-              <DialogDescription>
-                Make changes to your profile here. Click save when you are done.
-              </DialogDescription>
-            </DialogHeader>
+      <DialogContent className="sm:max-w-[425px]">
+        <form onSubmit={handleSubmit}>
+          <DialogHeader>
+            <DialogTitle>Edit profile</DialogTitle>
+            <DialogDescription>
+              Make changes here and save.
+            </DialogDescription>
+          </DialogHeader>
 
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <Label htmlFor="name-1">Name</Label>
-                <Input
-                  id="name-1"
-                  name="name"
-                  defaultValue={name} 
-                />
-              </div>
-
-              <div className="grid gap-3">
-                <Label htmlFor="role-1">Role</Label>
-                <Input
-                  id="role-1"
-                  name="role"
-                  defaultValue={role} 
-                />
-              </div>
-              <div>
-                <Label htmlFor="phone-1">Phone</Label>
-                <Input
-                  id="phone-1"
-                  name="phone"
-                  type="string"
-                  defaultValue={phone}
-                />
-              </div>
+          <div className="grid gap-4">
+            <div className="grid gap-3">
+              <Label>Name</Label>
+              <Input name="name" defaultValue={name} />
             </div>
 
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
+            <div className="grid gap-3">
+              <Label>Role</Label>
+              <Input name="role" defaultValue={role} />
+            </div>
 
-              <Button type="submit">Save changes</Button>
-            </DialogFooter>
-          </DialogContent>
+            <div className="grid gap-3">
+              <Label>Phone</Label>
+              <Input name="phone" defaultValue={phone} />
+            </div>
+          </div>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline" id={`close-dialog-${id}`}>
+                Cancel
+              </Button>
+            </DialogClose>
+
+            <Button type="submit">Save changes</Button>
+          </DialogFooter>
         </form>
-      </Dialog>
-    </>
+      </DialogContent>
+    </Dialog>
   );
 }
+
 
 export interface User {
   id: number;
   name: string;
   role: string;
-  phone: number;
+  phone: string;
 }
