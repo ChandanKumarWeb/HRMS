@@ -26,14 +26,13 @@ export default function Sidebar({
         ${collapsed ? "hidden md:w-25 md:block" : "w-full md:w-58"}
       `}
     >
-      {/* Logo */}
       <div className="mb-6 flex items-center justify-between">
         <Link href="/">
           <h1
             className={`text-xl font-bold transition-opacity duration-300 
           ${collapsed ? "opacity-100" : "opacity-100"}`}
           >
-            HRMS
+            Demoo
           </h1>
         </Link>
 
@@ -66,15 +65,10 @@ export default function Sidebar({
               >
                 <item.icon size={18} />
                 {!collapsed && (
-                  <span
-                    onClick={() => setCollapsed(true)}
-                  >
-                    {item.title}
-                  </span>
+                  <span onClick={() => setCollapsed(true)}>{item.title}</span>
                 )}
               </div>
             </Link>
-            
           );
         })}
       </nav>

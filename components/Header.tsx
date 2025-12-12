@@ -2,7 +2,7 @@
 
 import { Bell, Menu } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { ModeToggle } from "./mode-toggle";
+import { AnimatedThemeToggler } from "./ui/animated-theme-toggler";
 
 export default function Header({
   collapsed,
@@ -40,7 +40,7 @@ export default function Header({
 
       <div className="flex items-center gap-4">
         <Bell />
-        <ModeToggle />
+        <AnimatedThemeToggler />
       </div>
     </header>
   );

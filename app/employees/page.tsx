@@ -111,14 +111,14 @@ function EditFN({
       });
     },
     onSuccess: () => {
-      refetch(); // 🔥 refresh table immediately
+      refetch();
     },
   });
 
-  function handleSubmit(e: any) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-    const form = new FormData(e.target);
+    const form = new FormData(e.currentTarget);
     updateMutation.mutate(form);
 
     document.getElementById(`close-dialog-${id}`)?.click();
@@ -127,16 +127,14 @@ function EditFN({
   return (
     <Dialog>
       <DialogTrigger asChild>
-          <UserPen width={18} />
+        <UserPen width={18} />
       </DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px]">
         <form onSubmit={handleSubmit}>
           <DialogHeader>
             <DialogTitle>Edit profile</DialogTitle>
-            <DialogDescription>
-              Make changes here and save.
-            </DialogDescription>
+            <DialogDescription>Make changes here and save.</DialogDescription>
           </DialogHeader>
 
           <div className="grid gap-4">
@@ -170,7 +168,6 @@ function EditFN({
     </Dialog>
   );
 }
-
 
 export interface User {
   id: number;
