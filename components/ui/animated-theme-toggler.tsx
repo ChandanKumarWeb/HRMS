@@ -33,12 +33,7 @@ export const AnimatedThemeToggler = ({
 
   // Load theme at startup
   useEffect(() => {
-    const saved = localStorage.getItem("theme") as
-      | "light"
-      | "dark"
-      | "system"
-      | null;
-
+    const saved = localStorage.getItem("theme") as "light" | "dark" | "system";
     const initial = saved ?? "system";
     setMode(initial);
     applyTheme(initial);
