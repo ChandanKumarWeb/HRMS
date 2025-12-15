@@ -22,7 +22,7 @@ export default function Sidebar({
 
   return (
     <aside
-      className={`bg-gray-100 dark:bg-black border-r  border-black dark:border-white h-screen p-2 md:p-4 m-2 mr-0 ß transition-all duration-900
+      className={`bg-gray-100 dark:bg-black border-r  border-black dark:border-white h-screen p-2 md:p-4 m-2 mr-0 transition-all duration-900
         ${collapsed ? "hidden md:w-25 md:block" : "w-full md:w-58"}
       `}
     >
